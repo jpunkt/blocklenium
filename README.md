@@ -21,7 +21,7 @@ Installation
 
 To install on the IPC, download the `.zip` File from github. Open the `cmd.exe` command utility and type
 
-        pip install C:\Path\to\blocklenium-X.X.X.zip
+        pip install C:\Path\to\blocklenium-master.zip
         
 Make sure that the IPC has a working internet connection. At the end, you should see
 something like this:
