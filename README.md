@@ -14,7 +14,7 @@ a softPLC supporting [ADS](https://infosys.beckhoff.com/english.php?content=../c
 
 - Python >3.6 with PIP
 - Chrome Webbrowser
-- Selenium Webdriver
+- Selenium Webdriver (See `HOWTO-SELENIUM.md` for instructions)
 
 Installation
 ============
