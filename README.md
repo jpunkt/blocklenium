@@ -33,20 +33,32 @@ appropriate paths. To test if the installation was successful, type
 
         blocklenium --help
         
-You should see a list of the command line parameters.
+You should see a list of the command line parameters. The options `-b` and `-u` are
+mandatory (see below).
 
 Intended Use
 ============
 
-blocklenium is intended to be started from the PLC, and will terminate when
-it loses contact to the ADS service.
+blocklenium is intended to be started by the PLC, and stay active as long as the PLC
+is in *Run Mode*. It will terminate on it's own when it loses contact to the ADS
+service (i.e. when the PLC is put in *Config Mode*).
+
+blocklenium requires the PLC to provide a boolean flag `GVL.bStartBlockly`. The name
+of the flag can be changed using the command line option `--plc_flag`. Setting this
+flag to `TRUE` on the PLC starts the browser, loads the web page given with the option
+`-u` and then runs the bookmarklet.
+
+
 
 Creating bookmarklets
 ---------------------
 
 When using `blockly-desk` to create bookmarklets, just drag the finished bookmarklet
-(marked "V.1" or similar) onto the desktop. This will create a file with the ending
-`.url`. Just pass the path to this file using the command line parameter `-u`.
+(marked "V.1" or similar) onto the desktop. This will create a bookmark file with the
+ending `.url`. Just pass the path to this file using the command line parameter `-b`.
+
+If you are writing the bookmarklet in javascript from scratch, you can also save the
+plain javascript code in a text file with the ending `.js` or `.txt`.
 
 Starting from the PLC
 ---------------------
@@ -55,8 +67,9 @@ Starting from the PLC
 If you want to test different command line parameters, make sure that the PLC is running
 before you start blocklenium.
 
-To start blocklenium from inside the PLC, use [NT_StartProcess](https://infosys.beckhoff.com/english.php?content=../content/1033/tcplclibutilities/html/tcplclibutilities_nt_startprocess.htm&id), which needs the
-`TC2_Utilities`. See the following example PLC code:
+To start blocklenium from the PLC, use [NT_StartProcess](https://infosys.beckhoff.com/english.php?content=../content/1033/tcplclibutilities/html/tcplclibutilities_nt_startprocess.htm&id),
+which needs the `TC2_Utilities` Library enabled on the PLC. See the following example
+PLC code:
 
         PROGRAM MAIN
         VAR
@@ -70,9 +83,12 @@ To start blocklenium from inside the PLC, use [NT_StartProcess](https://infosys.
                 NETID := '',
                 PATHSTR := 'blocklenium',
                 DIRNAME := 'C:\Users\Administrator\Desktop',
-                COMNDLINE := '-b V.1.url -u http://orf.at',
+                COMNDLINE := '-b V.1.url -u http://www.franka-desk.de',
                     START := TRUE,
                 BUSY => bBusy
             );
             bStartscript := FALSE;
         END_IF
+
+**Please note:** The above code only starts the script, but does not yet open the
+browser. To run the bookmarklet, you must set `GVL.bStartBlockly` to `TRUE`.
