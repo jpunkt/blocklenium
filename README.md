@@ -4,7 +4,9 @@ Blocklenium
 *Blocklenium* provides a means of starting a remote-controlled browser and running a
 bookmarklet through a Beckhoff PLC. It was created to control [franka emika robots](https://www.franka.de/)
 with a web-based user interface using bookmarklets created with 
-[blockly-desk](http://blockly-desk.comemak.at/demos/code/index.html).
+[blockly-desk](http://blockly-desk.comemak.at/demos/code/index.html). Other uses are
+not recommended, as it performs some rather specific operations on the loaded website
+which are characteristic for franka desk.
 
 Prerequisites
 =============
@@ -48,7 +50,10 @@ of the flag can be changed using the command line option `--plc_flag`. Setting t
 flag to `TRUE` on the PLC starts the browser, loads the web page given with the option
 `-u` and then runs the bookmarklet.
 
-
+If desk requires a login, you must include the `--login-required` flag. blocklenium
+will then attempt to read the login credentials from the PLC variables `GVL.sDeskUsername`
+and `GVL.sDeskPassword` and enter them in the appropriate fields. If the login page is
+not displayed, this is ignored.
 
 Creating bookmarklets
 ---------------------
@@ -83,7 +88,7 @@ PLC code:
                 NETID := '',
                 PATHSTR := 'blocklenium',
                 DIRNAME := 'C:\Users\Administrator\Desktop',
-                COMNDLINE := '-b V.1.url -u http://www.franka-desk.de',
+                COMNDLINE := '-b V.1.url -u http://robot.franka.de',
                     START := TRUE,
                 BUSY => bBusy
             );
