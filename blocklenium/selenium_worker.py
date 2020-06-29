@@ -40,7 +40,6 @@ class SeleniumWorker(threading.Thread):
             else:
                 raise ValueError('Bookmarklet file must be a web link!')
         else:
-            # TODO error handling
             with open(bookmarklet_path, "r") as f:
                 self.js = f.read()
 
@@ -68,7 +67,6 @@ class SeleniumWorker(threading.Thread):
                 if self.login_required:
                     self.desk_login()
 
-
                 # Execute JavaScript
                 if self.js is not None:
                     logger.info('Executing JavaScript...')
@@ -91,7 +89,7 @@ class SeleniumWorker(threading.Thread):
         pwdfields = self.chromedriver.find_elements_by_css_selector(
             "input[id*='Password']")
 
-        try:
+        if (len(userfields) > 0) and (len(pwdfields > 0)):
             userfields[0].send_keys(self.desk_username)
             pwdfields[0].send_keys(self.desk_password)
 
@@ -104,5 +102,6 @@ class SeleniumWorker(threading.Thread):
                 EC.presence_of_element_located((By.CLASS_NAME,
                                                 "timeline-header"))
             )
-        except Exception as e:
-            logger.info("Attempting to login caused {0}.".format(e))
+        else:
+            logger.info(
+                'Expected Login page but found no login fields. Ignored')
