@@ -89,7 +89,7 @@ class SeleniumWorker(threading.Thread):
         pwdfields = self.chromedriver.find_elements_by_css_selector(
             "input[id*='Password']")
 
-        if (len(userfields) > 0) and (len(pwdfields > 0)):
+        if (len(userfields) > 0) and (len(pwdfields) > 0):
             userfields[0].send_keys(self.desk_username)
             pwdfields[0].send_keys(self.desk_password)
 
