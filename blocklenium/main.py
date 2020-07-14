@@ -14,9 +14,6 @@ if __name__ == '__main__':
     pass
 
 
-
-
-
 @click.command()
 @click.option('--plc_id', default=settings.PLC_ID, show_default=True,
               help='ADS Id of PLC')
