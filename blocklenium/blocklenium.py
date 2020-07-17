@@ -7,7 +7,6 @@ from time import sleep
 
 from blocklenium.selenium_worker import SeleniumWorker
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -15,7 +14,6 @@ class Blocklenium(object):
     def __init__(self, config):
 
         self.config = config
-        self.plc_start_flag = self.config['PLC_START_FLAG']
 
         self.is_error = False
 
@@ -36,16 +34,21 @@ class Blocklenium(object):
 
         self.callback = self._plc.notification(pyads.
                                                PLCTYPE_BOOL)(
-                                               self._callback)
+            self._callback)
 
     def _callback(self, handle, name, timestamp, value):
         if value:
-            logger.info('Queued flag to handle...')
+            logger.info(
+                'Callback received True, queuing True for worker...')
             self.queue.put(True)
+        else:
+            logger.info(
+                'Callback received False, queuing None for worker...')
+            self.queue.put(None)
 
         logger.debug(
-             'handle: {0} | name: {1} | timestamp: {2} | value: {3}'.format(
-                handle, name, timestamp, value))
+            'handle: {0} | name: {1} | timestamp: {2} | value: {3}'.
+            format(handle, name, timestamp, value))
 
     def handle_error(self, message, error=None):
         self.is_error = True
@@ -92,7 +95,7 @@ class Blocklenium(object):
                     return
 
             self._plc.add_device_notification(
-                self.plc_start_flag, attr,
+                self.config['PLC_START_FLAG'], attr,
                 self.callback)
 
             while not self.is_error:

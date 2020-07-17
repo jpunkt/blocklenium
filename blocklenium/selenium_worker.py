@@ -44,6 +44,9 @@ class SeleniumWorker(threading.Thread):
                 self.js = f.read()
 
     def run(self):
+        """Runs in an endless loop until False was put on the queue.
+        If True is on the queue, opens a browser and runs bookmarklet.
+        If None is on the queue, closes the browser."""
         logger.debug('Thread running.')
 
         while True:
@@ -77,8 +80,11 @@ class SeleniumWorker(threading.Thread):
                 # Close browser
                 if self.chromedriver is not None:
                     self.chromedriver.quit()
+                    self.chromedriver = None
 
-                break
+                if q is False:
+                    logger.info('Exiting worker loop...')
+                    break
 
     def desk_login(self):
         logger.info('attempting login to desk...')
